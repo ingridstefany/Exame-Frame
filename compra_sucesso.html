@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Anúncios</title>
+    <style>
+        /* Estilos (mantidos iguais) */
+
+        .comprar-btn {
+            /* ... (mantidos iguais) */
+        }
+
+        .comprar-btn:hover {
+            /* ... (mantidos iguais) */
+        }
+
+        .quantity-input {
+            /* ... (mantidos iguais) */
+        }
+
+        .price {
+            /* ... (mantidos iguais) */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h4>Lista de Anúncios</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário</th>
+                    <th>Total</th>
+                    <th>Comprar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for anuncio in anuncios %}
+                    <tr>
+                        <td>{{ anuncio.nome }}</td>
+                        <td>{{ anuncio.desc }}</td>
+                        <td>
+                            <input type="number" class="quantity-input" name="quantity" value="1" min="1" data-unit-price="{{ anuncio.preco }}">
+                        </td>
+                        <td class="unit-price">{{ anuncio.preco }}</td>
+                        <td class="total-price">{{ anuncio.preco }}</td>
+                        <td>
+                            <!-- Modificar o link para chamar a função JavaScript e processar a compra no lado do cliente -->
+                            <a class="comprar-btn" href="javascript:void(0);" onclick="processarCompra({{ anuncio.id }})">Comprar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+   <!-- Adicione este script abaixo do script existente -->
+<script>
+    function processarCompra(anuncioId) {
+        var quantity = $("tr:has(a.comprar-btn)").find("input.quantity-input").val();
+
+        $.ajax({
+            url: "/comprar/" + anuncioId,
+            type: "POST",
+            data: { quantity: quantity },
+            success: function (response) {
+                // Redirecione para a página de sucesso
+                window.location.href = "/compra_sucesso";
+            },
+            error: function (error) {
+                // Lide com erros, se necessário
+                console.error(error);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
